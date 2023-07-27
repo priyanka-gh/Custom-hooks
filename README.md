@@ -21,7 +21,9 @@ import { useCopyToClipboard } from 'customutilityhooks/custom-hooks';
 
 // Usage example
 
+```
 const { isCopied, copyToClipboard, resetIsCopied } = useCopyToClipboard();
+```
 
 ## useCountdown
 
