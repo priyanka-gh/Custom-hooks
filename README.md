@@ -76,8 +76,6 @@ A hook to get the user's geolocation coordinates.
 ```
 import { useGeolocation } from 'customutilityhooks/custom-hooks';
 
-// Usage example
-
 const { latitude, longitude, error } = useGeolocation();
 ```
 
