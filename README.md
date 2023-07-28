@@ -226,9 +226,22 @@ const { latitude, longitude, error } = useGeolocation();
 A hook to detect when the user is idle.
 
 ```
+import React, { useState } from 'react';
 import { useIdle } from 'customutilityhooks/custom-hooks';
 
-const isIdle = useIdle(3000);
+const App = () => {
+  const isIdle = useIdle(3000); // Timeout set to 3000ms (3 seconds)
+
+  return (
+    <div>
+      <h1>Idle Detection Example</h1>
+      <p>User is {isIdle ? 'Idle' : 'Active'}</p>
+    </div>
+  );
+};
+
+export default App;
+
 ```
 
 ## useLocalStorage
@@ -236,9 +249,32 @@ const isIdle = useIdle(3000);
 A hook to interact with data in the local storage.
 
 ```
+import React, { useState } from 'react';
 import { useLocalStorage } from 'customutilityhooks/custom-hooks';
 
-const { value, setValueInLocalStorage } = useLocalStorage('exampleKey', 'defaultValue');
+const App = () => {
+  const { value, setValueInLocalStorage } = useLocalStorage('myData', '');
+
+  const handleInputChange = (event) => {
+    setValueInLocalStorage(event.target.value);
+  };
+
+  return (
+    <div>
+      <h1>Local Storage Example</h1>
+      <input
+        type="text"
+        value={value}
+        onChange={handleInputChange}
+        placeholder="Enter value..."
+      />
+      <p>Value in Local Storage: {value}</p>
+    </div>
+  );
+};
+
+export default App;
+
 ```
 
 ## useMousePosition
@@ -246,9 +282,23 @@ const { value, setValueInLocalStorage } = useLocalStorage('exampleKey', 'default
 A hook to get the current mouse position.
 
 ```
+import React, { useState } from 'react';
 import { useMousePosition } from 'customutilityhooks/custom-hooks';
 
-const { x, y } = useMousePosition();
+const App = () => {
+  const { x, y } = useMousePosition();
+
+  return (
+    <div>
+      <h1>Mouse Position Example</h1>
+      <p>X: {x}</p>
+      <p>Y: {y}</p>
+    </div>
+  );
+};
+
+export default App;
+
 ```
 
 ## useScroll
@@ -256,9 +306,23 @@ const { x, y } = useMousePosition();
 A hook to get the current scroll position of the window.
 
 ```
+import React, { useState } from 'react';
 import { useScroll } from 'customutilityhooks/custom-hooks';
 
-const { x, y } = useScroll();
+const App = () => {
+  const { x, y } = useScroll();
+
+  return (
+    <div>
+      <h1>Scroll Position Example</h1>
+      <p>Scroll X: {x}</p>
+      <p>Scroll Y: {y}</p>
+    </div>
+  );
+};
+
+export default App;
+
 ```
 
 ## useToggle
@@ -266,9 +330,23 @@ const { x, y } = useScroll();
 A hook to toggle between two states.
 
 ```
+import React, { useState } from 'react';
 import { useToggle } from 'customutilityhooks/custom-hooks';
 
-const [isToggled, toggle] = useToggle(false);
+const App = () => {
+  const [isToggled, toggle] = useToggle();
+
+  return (
+    <div>
+      <h1>Toggle Example</h1>
+      <button onClick={toggle}>Toggle</button>
+      {isToggled ? <p>Toggle is ON</p> : <p>Toggle is OFF</p>}
+    </div>
+  );
+};
+
+export default App;
+
 ```
 
 ## useValidation
@@ -276,13 +354,73 @@ const [isToggled, toggle] = useToggle(false);
 A hook to handle form validation logic.
 
 ```
+import React, { useState } from 'react';
 import { useValidation } from 'customutilityhooks/custom-hooks';
 
-const initialState = { username: '', email: '' };
-const validationRules = {
-  username: [{name : 'required'}, {name: 'minLength', value:3}]
-  email: [{ name: 'required' }, { name: 'email' }],
+const App = () => {
+  // Initial form state and validation rules
+  const initialFormState = {
+    name: '',
+    email: '',
+    password: '',
+  };
+
+  const validationRules = {
+    name: [{ name: 'required' }],
+    email: [{ name: 'required' }, { name: 'minLength', value: 5 }],
+    password: [{ name: 'required' }, { name: 'minLength', value: 8 }],
+  };
+
+  // Using the useValidation custom hook
+  const { values, errors, handleChange, handleSubmit } = useValidation(
+    initialFormState,
+    validationRules
+  );
+
+  return (
+    <div>
+      <h1>Form Validation Example</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={values.name}
+            onChange={handleChange}
+          />
+          {errors.name && <p>{errors.name}</p>}
+        </div>
+        <div>
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={values.email}
+            onChange={handleChange}
+          />
+          {errors.email && <p>{errors.email}</p>}
+        </div>
+        <div>
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={values.password}
+            onChange={handleChange}
+          />
+          {errors.password && <p>{errors.password}</p>}
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  );
 };
-const { values, errors, handleChange, handleSubmit } = useValidation(initialState, validationRules);
+
+export default App;
+
 ```
 
