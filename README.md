@@ -216,9 +216,28 @@ export default App;
 A hook to get the user's geolocation coordinates.
 
 ```
-import { useGeolocation } from 'customutilityhooks/custom-hooks';
+import React from "react";
+import { useGeolocation } from "customutilityhooks/custom-hooks";
 
-const { latitude, longitude, error } = useGeolocation();
+const App = () => {
+  const { latitude, longitude, error } = useGeolocation();
+
+  return (
+    <div>
+      {error ? (
+        <p>Error: {error}</p>
+      ) : (
+        <>
+          <p>Latitude: {latitude}</p>
+          <p>Longitude: {longitude}</p>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default App;
+
 ```
 
 ## useIdle
