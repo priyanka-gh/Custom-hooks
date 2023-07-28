@@ -4,7 +4,7 @@
 2. useCountdown
 3. useDarkMode
 4. useDebouncer
-5. useDropassets
+5. useDropzone
 6. useGeolocation
 7. useIdle
 8. useLocalStorage
@@ -17,9 +17,36 @@
 
 A hook to easily copy text to the clipboard.
 ```
-import { useCopyToClipboard } from 'customutilityhooks/custom-hooks';
+import React,{useState} from 'react';
+import {useCopyToClipboard} from 'customutilityhooks/custom-hooks'
 
-const { isCopied, copyToClipboard, resetIsCopied } = useCopyToClipboard();
+function App() {
+  const [text, setText] = useState('');
+  const { isCopied, copyToClipboard } = useCopyToClipboard();
+
+  return (
+    <div>
+      <h1>Copy to Clipboard Example</h1>
+      <input
+        type="text"
+        placeholder="Enter text"
+        onChange={(event) => setText(event.target.value)}
+      />
+      <button
+        onClick={() => copyToClipboard(text)}
+        disabled={!text}
+      >
+        Copy
+      </button>
+      <p>
+        <strong>Copied:</strong> {isCopied ? text : 'No text has been copied yet.'}
+      </p>
+    </div>
+  );
+}
+
+export default App;
+
 ```
 
 ## useCountdown
@@ -27,10 +54,23 @@ const { isCopied, copyToClipboard, resetIsCopied } = useCopyToClipboard();
 A hook to create countdown functionality with a specific end time.
 
 ```
-import { useCountdown } from 'customutilityhooks/custom-hooks';
+import React,{useState} from 'react';
+import {useCountdown} from 'customutilityhooks/custom-hooks'
 
-const endTime = new Date('2023-12-31T23:59:59').getTime();
-const countdown = useCountdown(endTime);
+
+const App = () => {
+  const countdown = useCountdown(new Date(Date.now() + 10000));
+  const renderedCountdown = countdown.toString();
+
+  return (
+    <div>
+      <h1>Countdown Timer</h1>
+      <p>Time remaining: {renderedCountdown}</p>
+    </div>
+  );
+};
+
+export default App;
 ```
 
 ## useDarkMode
@@ -38,9 +78,40 @@ const countdown = useCountdown(endTime);
 A hook to enable/disable dark mode in your app.
 
 ```
-import { useDarkMode } from 'customutilityhooks/custom-hooks';
+import React,{useState, useEffect} from 'react';
+import {useDarkMode} from 'customutilityhooks/custom-hooks'
 
-const { darkMode, setToggleDarkMode } = useDarkMode();
+const App = () => {
+  const [darkMode, setDarkMode] = useState(false);
+
+  const handleToggleDarkMode = () => {
+    setDarkMode((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const body = document.body;
+
+    if (darkMode) {
+      body.style.backgroundColor = 'black';
+      body.style.color = 'white';
+    } else {
+      body.style.backgroundColor = 'white';
+      body.style.color = 'black';
+    }
+  }, [darkMode]);
+
+  return (
+    <div>
+      <h1>Dark Mode</h1>
+      <p>
+        You can toggle dark mode by clicking on the button below.
+      </p>
+      <button onClick={handleToggleDarkMode}>Toggle Dark Mode</button>
+    </div>
+  );
+};
+
+export default App;
 ```
 
 
@@ -49,24 +120,95 @@ const { darkMode, setToggleDarkMode } = useDarkMode();
 A hook to debounce function calls for better performance.
 
 ```
+import React, { useState } from 'react';
 import { useDebouncer } from 'customutilityhooks/custom-hooks';
 
-const apiURL = 'https://api.example.com/search';
-const searchData = useDebouncer(inputVal, apiURL, 2000);
+const App = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const apiURL = `https://api.postalpincode.in/pincode/${searchTerm}`; // Replace with your API endpoint
+
+  const searchData = useDebouncer(searchTerm, apiURL);
+
+  const handleInputChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={handleInputChange}
+        placeholder="Search..."
+      />
+      <div>
+        {searchData ? (
+          <ul>
+            {searchData.map((item) => (
+              <li key={item.PostOffice[0].Pincode}>{item.PostOffice[0].Name}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>No results yet.</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default App;
+
 ```
 
-## useDropassets
+## useDropzone
 
 A hook to handle file drop and upload functionality.
 
 ```
-import { useDropassets } from 'customutilityhooks/custom-hooks';
+import React,{useState} from 'react';
+import {useDropzone} from 'customutilityhooks/custom-hooks'
 
-const handleDrop = (files) => {
-  // Handle dropped files here
-};
-const { isDragging, handleDragEnter, handleDragLeave, handleDragOver, handleDrop: handleDropzone } =
-  useDropzone(handleDrop);
+function App() {
+  const [files, setFiles] = useState([]);
+
+  const {
+    isDragging,
+    handleDragEnter,
+    handleDragLeave,
+    handleDragOver,
+    handleDrop,
+  } = useDropzone({
+    onDrop: (files) => {
+      setFiles(files);
+    },
+  });
+
+  return (
+    <div>
+      <h1>Drag and Drop Example</h1>
+      <p>
+        Drag and drop some files here.
+      </p>
+      <div
+        {...handleDragEnter}
+        {...handleDragOver}
+        {...handleDragLeave}
+        {...handleDrop}
+      >
+        <input type="file" multiple />
+      </div>
+      <ul>
+        {files.map((file) => (
+          <li key={file.name}>
+            {file.name}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
 ```
 
 ## useGeolocation
