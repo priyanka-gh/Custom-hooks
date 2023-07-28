@@ -358,7 +358,6 @@ import React, { useState } from 'react';
 import { useValidation } from 'customutilityhooks/custom-hooks';
 
 const App = () => {
-  // Initial form state and validation rules
   const initialFormState = {
     name: '',
     email: '',
@@ -371,7 +370,6 @@ const App = () => {
     password: [{ name: 'required' }, { name: 'minLength', value: 8 }],
   };
 
-  // Using the useValidation custom hook
   const { values, errors, handleChange, handleSubmit } = useValidation(
     initialFormState,
     validationRules
